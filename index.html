@@ -4,10 +4,27 @@
     <script src="https://unpkg.com/filer/dist/filer.min.js"></script>
     <script>
         const fs = new Filer.FileSystem();
+        var notepadData = "";
 
         window.addEventListener('DOMContentLoaded', (event) => {
-            console.log('DOM fully loaded and parsed');
+            fs.readFile('/file', 'utf8', function (err, data) {
+                if (err){
+                    notepadData = "Welcome to My Notepad!";
+                    console.log(notepadData);
+                };
+                if(data == "" || data == null){
+                    notepadData = "Welcome to My Notepad!";
+                    console.log(notepadData);
+                };
+                notepadData = data;
+            });
         });
+
+        window.setInterval(function() {
+            fs.writeFile('/file', notepadData, function (err) {
+                if(err) throw err;
+            });
+        }, 2000);
     </script>
 </head>
 
