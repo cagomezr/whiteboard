@@ -1,34 +1,58 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <script src="https://unpkg.com/filer/dist/filer.min.js"></script>
-    <script>
-        const fs = new Filer.FileSystem();
-        var notepadData = "";
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whiteboard</title>
 
-        window.addEventListener('DOMContentLoaded', (event) => {
-            fs.readFile('/file', 'utf8', function (err, data) {
-                if (err){
-                    notepadData = "Welcome to My Notepad!";
-                    console.log(notepadData);
-                };
-                if(data == "" || data == null){
-                    notepadData = "Welcome to My Notepad!";
-                    console.log(notepadData);
-                };
-                notepadData = data;
-            });
-        });
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
-        window.setInterval(function() {
-            fs.writeFile('/file', notepadData, function (err) {
-                if(err) throw err;
-            });
-        }, 2000);
-    </script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 
-<body>
+<!-- Scripts -->
+<script src="https://unpkg.com/filer/dist/filer.min.js"></script>
+<script>
+    const fs = new Filer.FileSystem();
+    var notepadData = "";
 
+    window.addEventListener('DOMContentLoaded', (event) => {
+        fs.readFile('/text', 'utf8', function (err, data) {
+            if (err || data == "") {
+                document.querySelector('#note').innerHTML = "Welcome to my Notepad!";
+            } else {
+                document.querySelector('#note').innerHTML = data;
+            }
+        });
+    });
+
+
+    function save() {
+        fs.writeFile('/text', document.querySelector('#note').innerHTML);         
+    };
+
+    window.setInterval(save, 5000);
+
+</script>
+
+<body>
+    <div class="panel panel-default" style="min-width: 400px;max-width: 400px;max-height: 300px;">
+        <div class="panel-heading">
+            Notepad
+        </div>
+        <div class="panel-body">
+            <div id="note" contenteditable="true" style="min-height: 20px;"></div>
+        </div>
+        <div class="panel-footer">
+            <button onclick="save()">Save</button>
+            <button onclick="document.querySelector('#note').innerHTML = ''">Clear</button>
+        </div>
+    </div>
 </body>
+
 </html>
